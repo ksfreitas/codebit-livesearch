@@ -1,0 +1,20 @@
+{
+  "name": "codebit-livesearch",
+  "version": "1.0.1",
+  "author": "Cássio de Freitas e Silva <ksfreitas@gmail.com>",
+  "description": "Another Live Search to be used with AJAX",
+  "dependencies": {
+  },
+  "engines": {
+  },
+  "keywords": [
+    "live",
+    "search",
+    "ajax",
+    "lookup"
+  ],
+  "license": "MIT",
+  "repository": "ksfreitas/codebit-livesearch",
+  "devDependencies": {
+  }
+}
