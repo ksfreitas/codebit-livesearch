@@ -1,14 +1,23 @@
+var CbLiveSearchInstances = [];
+
+function hideAllCbLiveSearch(except) {
+    for (var i = 0; i < CbLiveSearchInstances.length; i++) {
+        var cbLiveSearch = CbLiveSearchInstances[i];
+        if (except === cbLiveSearch) continue;
+        cbLiveSearch.hideList();
+        cbLiveSearch.list.selectManualSelection();
+    }
+}
+
+document.addEventListener('click', function () {
+    hideAllCbLiveSearch();
+});
+
 function createCbLiveSearchSkeleton() {
     var input = document.createElement('input');
     input.type = 'text';
-    input.className = 'cb-livesearch';
+    input.classList.add('cb-livesearch');
     return input
-}
-
-function createCbLiveSearchBackdrop() {
-    var backdrop = document.createElement('div');
-    backdrop.className = 'cb-livesearch-list-backdrop';
-    return backdrop;
 }
 
 function createCbLiveSearchListSkeleton(cbLiveSearch) {
@@ -149,26 +158,32 @@ function createCbLiveSearchListSkeleton(cbLiveSearch) {
 
 function CbLiveSearch(input, fillItems) {
     var self = this;
+    CbLiveSearchInstances.push(this);
     this.html2text = function (html) {
         if (html == null) return html;
         var div = document.createElement('div');
         div.innerHTML = html;
         return div.innerText;
-    }
+    };
     this.fillItems = fillItems === true;
     this.input = input || createCbLiveSearchSkeleton();
     this.input.setAttribute('autocomplete', 'off');
     this.input.classList.add('cb-livesearch-input');
-    this.input.addEventListener('focus', function () {
+    this.inputClickListener = this.input.addEventListener('click', function (e) {
+        hideAllCbLiveSearch(self);
+        e.preventDefault();
+        e.stopPropagation();
+    });
+    this.inputFocusListener = this.input.addEventListener('focus', function () {
         self.showList();
     });
     this.list = createCbLiveSearchListSkeleton(this);
-    this.backdrop = createCbLiveSearchBackdrop();
-    this.backdrop.addEventListener('click', function () {
-        self.hideList();
-        self.list.selectManualSelection();
+    this.list.addEventListener('click', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
     });
-    this.input.addEventListener('keydown', function (e) {
+
+    this.inputKeyDownListener = this.input.addEventListener('keydown', function (e) {
         self.showList();
         switch (e.keyCode) {
             case 38: // up arrow
@@ -230,7 +245,7 @@ function CbLiveSearch(input, fillItems) {
             }
         }, 300);
     };
-    this.input.addEventListener('keyup', function (e) {
+    this.inputKeyUpListener = this.input.addEventListener('keyup', function (e) {
         if (e.keyCode == 32 // space
             || e.keyCode == 46 // delete
             || e.keyCode >= 48 && e.keyCode <= 90 // numbers and characters
@@ -247,7 +262,6 @@ function CbLiveSearch(input, fillItems) {
             var parent = self.input.parentElement || document.body;
             self.showingList = true;
             parent.style.position = 'relative';
-            parent.appendChild(self.backdrop);
             parent.appendChild(self.list);
             self.list.setPosition(self.input);
             self.list.style.display = 'inline-block';
@@ -267,8 +281,6 @@ function CbLiveSearch(input, fillItems) {
         if (self.showingList) {
             self.showingList = false;
             self.list.classList.remove('show');
-            var parent = self.backdrop.parentElement;
-            if (parent != null) parent.removeChild(self.backdrop);
             setTimeout(function () {
                 var parent = self.list.parentElement;
                 if (parent != null) parent.removeChild(self.list);
@@ -337,5 +349,13 @@ function CbLiveSearch(input, fillItems) {
     this.clear = function () {
         self.list.clear();
         self.setValue(null);
+    };
+    this.destroy = function () {
+        input.classList.remove('cb-livesearch');
+        input.removeEventListener('click', self.inputClickListener);
+        input.removeEventListener('focus', self.inputFocusListener);
+        input.removeEventListener('keydown', self.inputKeyDownListener);
+        input.removeEventListener('keyup', self.inputKeyUpListener);
+        CbLiveSearchInstances.remove(self);
     }
 }

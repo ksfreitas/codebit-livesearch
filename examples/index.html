@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simple Modal Example</title>
+</head>
+<body>
+<p>This is a simple example.</p>
+
+<input id="myLiveSearch1" type="text">
+
+<br><br>
+
+<input id="myLiveSearch2" type="text">
+
+<link href="../codebit-livesearch.css" rel="stylesheet">
+<script src="../codebit-livesearch.js" type="text/javascript"></script>
+<script type="text/javascript">
+    var myLiveSearchInput1 = document.getElementById('myLiveSearch1');
+    var cbLivesearch1 = new CbLiveSearch(myLiveSearchInput1);
+    cbLivesearch1.setSourceCallback(function (itemsCallback, liveSearch) {
+        setTimeout(function (e) {
+            itemsCallback(
+                {
+                    requestId: liveSearch.requestId,
+                    records: [
+                        {id: '1', html: 'Item 1'},
+                        {id: '2', html: 'Item 2'},
+                        {id: '3', html: 'Item 3'},
+                        {id: '4', html: 'Item 4'},
+                        {id: '5', html: 'Item 5'},
+                        {id: '6', html: 'Item 6'},
+                    ]
+                });
+        }, 300);
+    });
+
+    var myLiveSearchInput2 = document.getElementById('myLiveSearch2');
+    var cbLivesearch2 = new CbLiveSearch(myLiveSearchInput2);
+    cbLivesearch2.setSourceCallback(function (itemsCallback, liveSearch) {
+        setTimeout(function (e) {
+            itemsCallback(
+                {
+                    requestId: liveSearch.requestId,
+                    records: [
+                        {id: '1', html: 'Item 1'},
+                        {id: '2', html: 'Item 2'},
+                        {id: '3', html: 'Item 3'},
+                        {id: '4', html: 'Item 4'},
+                        {id: '5', html: 'Item 5'},
+                        {id: '6', html: 'Item 6'},
+                    ]
+                });
+        }, 300);
+    });
+</script>
+</body>
+</html>

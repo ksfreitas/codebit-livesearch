@@ -1,20 +1,21 @@
 {
   "name": "codebit-livesearch",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "author": "Cássio de Freitas e Silva <ksfreitas@gmail.com>",
   "description": "Another Live Search to be used with AJAX",
   "dependencies": {
   },
-  "engines": {
-  },
+  "engines": {},
   "keywords": [
     "live",
     "search",
     "ajax",
     "lookup"
   ],
+  "scripts": {
+    "minify": "uglifyjs --compress --mangle -- codebit-livesearch.js > codebit-livesearch.min.js && uglifycss codebit-livesearch.css > codebit-livesearch.min.css"
+  },
   "license": "MIT",
   "repository": "ksfreitas/codebit-livesearch",
-  "devDependencies": {
-  }
+  "devDependencies": {}
 }
