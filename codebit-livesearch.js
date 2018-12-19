@@ -174,8 +174,12 @@ function CbLiveSearch(input, fillItems) {
         e.preventDefault();
         e.stopPropagation();
     });
+    this.selectOnFocus = true;
     this.inputFocusListener = this.input.addEventListener('focus', function () {
         self.showList();
+        if (self.selectOnFocus) {
+            self.input.setSelectionRange(0, self.input.value.length)
+        }
     });
     this.list = createCbLiveSearchListSkeleton(this);
     this.list.addEventListener('click', function (e) {
