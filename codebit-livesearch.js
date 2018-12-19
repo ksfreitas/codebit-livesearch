@@ -5,7 +5,6 @@ function hideAllCbLiveSearch(except) {
         var cbLiveSearch = CbLiveSearchInstances[i];
         if (except === cbLiveSearch) continue;
         cbLiveSearch.hideList();
-        cbLiveSearch.list.selectManualSelection();
     }
 }
 
