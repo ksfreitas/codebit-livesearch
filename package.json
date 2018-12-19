@@ -1,6 +1,6 @@
 {
   "name": "codebit-livesearch",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "author": "Cássio de Freitas e Silva <ksfreitas@gmail.com>",
   "description": "Another Live Search to be used with AJAX",
   "dependencies": {
