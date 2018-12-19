@@ -37,22 +37,15 @@
 
     var myLiveSearchInput2 = document.getElementById('myLiveSearch2');
     var cbLivesearch2 = new CbLiveSearch(myLiveSearchInput2);
-    cbLivesearch2.setSourceCallback(function (itemsCallback, liveSearch) {
-        setTimeout(function (e) {
-            itemsCallback(
-                {
-                    requestId: liveSearch.requestId,
-                    records: [
-                        {id: '1', html: 'Item 1'},
-                        {id: '2', html: 'Item 2'},
-                        {id: '3', html: 'Item 3'},
-                        {id: '4', html: 'Item 4'},
-                        {id: '5', html: 'Item 5'},
-                        {id: '6', html: 'Item 6'},
-                    ]
-                });
-        }, 300);
-    });
+    cbLivesearch2.searchDelay = 100;
+    cbLivesearch2.setSourceCallback(createOfflineDataSource([
+        {id: '1', html: 'Item 1'},
+        {id: '2', html: 'Item 2'},
+        {id: '3', html: 'Item 3'},
+        {id: '4', html: 'Item 4'},
+        {id: '5', html: 'Item 5'},
+        {id: '6', html: 'Item 6'},
+    ]));
 </script>
 </body>
 </html>

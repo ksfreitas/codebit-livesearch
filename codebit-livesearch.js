@@ -204,6 +204,7 @@ function CbLiveSearch(input, fillItems) {
                 break;
         }
     });
+    this.searchDelay = 300;
     this.search = function (emptySearch) {
         if (emptySearch === undefined) emptySearch = false;
         if (self.timerCallback != null) {
@@ -243,7 +244,7 @@ function CbLiveSearch(input, fillItems) {
                     }
                 }
             }
-        }, 300);
+        }, self.searchDelay);
     };
     this.inputKeyUpListener = this.input.addEventListener('keyup', function (e) {
         if (e.keyCode == 32 // space
@@ -357,5 +358,39 @@ function CbLiveSearch(input, fillItems) {
         input.removeEventListener('keydown', self.inputKeyDownListener);
         input.removeEventListener('keyup', self.inputKeyUpListener);
         CbLiveSearchInstances.remove(self);
+    }
+}
+
+function createOfflineDataSource(records) {
+    if (!records instanceof Array) {
+        console.error('Not a array: ' + JSON.stringify(records));
+        return null;
+    }
+
+    return function (itemsCallback, liveSearch) {
+        var text = liveSearch.getText().trim().toLowerCase();
+        var div = document.createElement('div');
+
+        var filteredRecords = [];
+        for (var i = 0; i < records.length; i++) {
+            var record = records[i];
+            if (record.html == null) {
+                console.warn('Record has no "html" field.');
+                continue;
+            }
+            if (record.id == null) {
+                console.warn('Record has no "id" field.');
+                continue;
+            }
+            div.innerHTML = records[i].html;
+            var recordText = div.innerText.trim().toLowerCase();
+            if (recordText.indexOf(text) != -1) {
+                filteredRecords.push(record);
+            }
+        }
+        itemsCallback({
+            requestId: liveSearch.requestId,
+            records: filteredRecords
+        });
     }
 }
