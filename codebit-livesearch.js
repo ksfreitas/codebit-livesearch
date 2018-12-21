@@ -4,7 +4,10 @@ function hideAllCbLiveSearch(except) {
     for (var i = 0; i < CbLiveSearchInstances.length; i++) {
         var cbLiveSearch = CbLiveSearchInstances[i];
         if (except === cbLiveSearch) continue;
-        cbLiveSearch.hideList();
+        if (cbLiveSearch.showingList) {
+            cbLiveSearch.list.selectManualSelection();
+            cbLiveSearch.hideList();
+        }
     }
 }
 
@@ -256,6 +259,7 @@ function CbLiveSearch(input, fillItems) {
             || e.keyCode >= 96 && e.keyCode <= 111 // numpad and math operators
             || e.keyCode >= 186 && e.keyCode <= 222 // other valid keys and accents
             || e.keyCode == 8 // backspace
+            || e.keyCode == 229 // android
         ) {
             self.search();
         }
@@ -275,6 +279,7 @@ function CbLiveSearch(input, fillItems) {
             }
             setTimeout(function () {
                 self.list.classList.add('show');
+                self.input.scrollIntoView(true);
             }, 60);
             setTimeout(function () {
                 // if (document.activeElement === self.input) self.input.select();
