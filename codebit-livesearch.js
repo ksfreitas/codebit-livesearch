@@ -279,7 +279,7 @@ function CbLiveSearch(input, fillItems) {
             }
             setTimeout(function () {
                 self.list.classList.add('show');
-                self.input.scrollIntoView(true);
+                //TODO: scroll if is necessary
             }, 60);
             setTimeout(function () {
                 // if (document.activeElement === self.input) self.input.select();
