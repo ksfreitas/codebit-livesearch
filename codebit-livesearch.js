@@ -260,6 +260,7 @@ function CbLiveSearch(input, fillItems) {
             || e.keyCode >= 186 && e.keyCode <= 222 // other valid keys and accents
             || e.keyCode == 8 // backspace
             || e.keyCode == 229 // android
+            || e.shiftKey && e.keyCode == 45
         ) {
             self.search();
         }
@@ -315,6 +316,7 @@ function CbLiveSearch(input, fillItems) {
             }
             self.selectedValue = value;
             self.input.value = self.html2text(value.html);
+            self.hideList();
         } else {
             self.selectedValue = null;
             self.input.value = null;
