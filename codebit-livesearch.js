@@ -212,12 +212,7 @@ function CbLiveSearch(input, fillItems) {
                 if (e.ctrlKey || e.metaKey) {
                     self.search();
                 }
-            default:
-                console.debug('Key pressed: ' + e.keyCode);
-                console.debug('Ctrl: ' + e.ctrlKey);
-                console.debug('Alt: ' + e.altKey);
-                console.debug('Meta: ' + e.metaKey);
-
+                break;
         }
     });
     this.searchDelay = 300;
