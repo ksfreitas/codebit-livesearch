@@ -47,7 +47,7 @@ function createCbLiveSearchListSkeleton(cbLiveSearch) {
         var row = list.tbody.insertRow(rowIndex);
         var cell = row.insertCell(0);
         row.detail = {'html': html, 'id': id, 'rowIndex': rowIndex};
-        cell.innerHTML = html;
+        cell.innerHTML = stripScripts(html);
         row.addEventListener('click', function (e) {
             list.itemSelected(html, id, rowIndex);
         });
@@ -164,7 +164,7 @@ function CbLiveSearch(input, fillItems) {
     this.html2text = function (html) {
         if (html == null) return html;
         var div = document.createElement('div');
-        div.innerHTML = html;
+        div.innerHTML = stripScripts(html);
         return div.innerText;
     };
     this.fillItems = fillItems === true;
@@ -208,6 +208,16 @@ function CbLiveSearch(input, fillItems) {
                 self.list.selectManualSelection();
                 self.hideList();
                 break;
+            case 86:
+                if (e.ctrlKey || e.metaKey) {
+                    self.search();
+                }
+            default:
+                console.debug('Key pressed: ' + e.keyCode);
+                console.debug('Ctrl: ' + e.ctrlKey);
+                console.debug('Alt: ' + e.altKey);
+                console.debug('Meta: ' + e.metaKey);
+
         }
     });
     this.searchDelay = 300;
@@ -486,7 +496,7 @@ function createOfflineDataSource(records) {
                 console.warn('Record has no "id" field.');
                 continue;
             }
-            div.innerHTML = records[i].html;
+            div.innerHTML = stripScripts(records[i].html);
             var recordText = removeDiacritics(div.innerText.trim().toLowerCase());
             if (recordText.indexOf(text) != -1) {
                 filteredRecords.push(record);
@@ -497,4 +507,37 @@ function createOfflineDataSource(records) {
             records: filteredRecords
         });
     }
+}
+
+function stripEventAttributes(e) {
+    var elements = e.querySelectorAll("*");
+    for (var i = 0; i < elements.length; i++) {
+        var e = elements[i];
+        var toRemove = [];
+        for (var j = 0; j < e.attributes.length; j++) {
+            var attrName = e.attributes[j].name;
+            if (attrName.toLowerCase().startsWith('on')) {
+                toRemove.push(attrName);
+            }
+        }
+        for (var j = 0; j < toRemove.length; j++) {
+            e.removeAttribute(toRemove[j]);
+        }
+    }
+}
+
+/**
+ * Note that at present, browsers will not execute the script if inserted using the innerHTML property, and likely never
+ * will especially as the element is not added to the document
+ */
+function stripScripts(s) {
+    var div = document.createElement('div');
+    div.innerHTML = s;
+    var scripts = div.getElementsByTagName('script');
+    var i = scripts.length;
+    while (i--) {
+        scripts[i].parentNode.removeChild(scripts[i]);
+    }
+    stripEventAttributes(div);
+    return div.innerHTML;
 }
