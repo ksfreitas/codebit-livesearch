@@ -169,7 +169,7 @@ function CbLiveSearch(input, fillItems) {
     };
     this.fillItems = fillItems === true;
     this.input = input || createCbLiveSearchSkeleton();
-    this.input.setAttribute('autocomplete', 'off');
+    this.input.setAttribute('autocomplete', 'new-password');
     this.input.classList.add('cb-livesearch-input');
     this.inputClickListener = this.input.addEventListener('click', function (e) {
         hideAllCbLiveSearch(self);
