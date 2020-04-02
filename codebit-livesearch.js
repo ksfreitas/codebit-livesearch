@@ -169,7 +169,7 @@ function CbLiveSearch(input, fillItems) {
     };
     this.fillItems = fillItems === true;
     this.input = input || createCbLiveSearchSkeleton();
-    this.input.setAttribute('autocomplete', 'new-password');
+    this.input.setAttribute('autocomplete', 'false');
     this.input.classList.add('cb-livesearch-input');
     this.inputClickListener = this.input.addEventListener('click', function (e) {
         hideAllCbLiveSearch(self);
@@ -215,6 +215,11 @@ function CbLiveSearch(input, fillItems) {
                 break;
         }
     });
+
+    this.inputChangeListener = this.input.addEventListener('change', function (e) {
+        self.search();
+    });
+
     this.searchDelay = 300;
     this.search = function (emptySearch) {
         if (emptySearch === undefined) emptySearch = false;
@@ -372,6 +377,7 @@ function CbLiveSearch(input, fillItems) {
         input.removeEventListener('focus', self.inputFocusListener);
         input.removeEventListener('keydown', self.inputKeyDownListener);
         input.removeEventListener('keyup', self.inputKeyUpListener);
+        input.removeEventListener('change', self.inputChangeListener);
         CbLiveSearchInstances.remove(self);
     }
 }
