@@ -167,9 +167,25 @@ function CbLiveSearch(input, fillItems) {
         div.innerHTML = stripScripts(html);
         return div.innerText;
     };
+
+    function guid() {
+        function s4() {
+            return Math.floor((1 + Math.random()) * 0x10000)
+                .toString(16)
+                .substring(1);
+        }
+
+        return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+    }
+
     this.fillItems = fillItems === true;
     this.input = input || createCbLiveSearchSkeleton();
-    this.input.setAttribute('autocomplete', 'false');
+    this.input.setAttribute('autocomplete', 'off');
+    this.input.setAttribute('autocorrect', 'off');
+    this.input.setAttribute('autocapitalize', 'off');
+    this.input.setAttribute('spellcheck', 'false');
+    this.input.setAttribute('aria-autocomplete', 'list');
+    this.input.setAttribute('aria-haspopup', 'true');
     this.input.classList.add('cb-livesearch-input');
     this.inputClickListener = this.input.addEventListener('click', function (e) {
         hideAllCbLiveSearch(self);
@@ -188,6 +204,9 @@ function CbLiveSearch(input, fillItems) {
         e.preventDefault();
         e.stopPropagation();
     });
+
+    this.list.id = guid();
+    this.input.setAttribute('aria-controls', this.list.id);
 
     this.inputKeyDownListener = this.input.addEventListener('keydown', function (e) {
         self.showList();
