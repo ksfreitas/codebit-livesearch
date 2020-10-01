@@ -382,6 +382,14 @@ function CbLiveSearch(input, fillItems) {
     this.setEmptyText = function (text) {
         self.emptyText = text;
     };
+    this.showOrHideEmptyText = function () {
+        if (self.list.tbody.rows.length == 0) {
+            self.list.messageBox.innerText = self.emptyText || '';
+            self.list.messageBox.classList.add('show');
+        } else {
+            self.list.messageBox.classList.remove('show');
+        }
+    };
     this.clear = function () {
         self.list.clear();
         self.setValue(null);
