@@ -239,7 +239,7 @@ function CbLiveSearch(input, fillItems) {
         self.search();
     });
 
-    this.searchDelay = 300;
+    this.searchDelay = 100;
     this.search = function (emptySearch) {
         if (emptySearch === undefined) emptySearch = false;
         if (self.timerCallback != null) {
@@ -261,17 +261,21 @@ function CbLiveSearch(input, fillItems) {
                 }
                 try {
                     self.sourceCallback(function (data) {
-                        if (data.requestId != self.requestId) {
-                            return;
+                        if (data.requestId == self.requestId) {
+                            self.list.clear();
+                            for (var i = 0; i < data.records.length; i++) {
+                                self.list.addItem(data.records[i].html, data.records[i].id);
+                            }
+                            if (data.records.length != 0 && text.trim().length != 0) {
+                                self.list.manualSelectNext();
+                            }
+                            if (data.records.length != 0) {
+                                self.list.messageBox.classList.remove('show');
+                            } else {
+                                self.list.messageBox.innerText = self.emptyText || '';
+                                self.list.messageBox.classList.add('show');
+                            }
                         }
-                        self.list.clear();
-                        for (var i = 0; i < data.records.length; i++) {
-                            self.list.addItem(data.records[i].html, data.records[i].id);
-                        }
-                        if (data.records.length != 0 && text.trim().length != 0) {
-                            self.list.manualSelectNext();
-                        }
-                        self.showOrHideEmptyText();
                     }, self);
                 } finally {
                     if (emptySearch) {
@@ -311,9 +315,9 @@ function CbLiveSearch(input, fillItems) {
                 self.list.classList.add('show');
                 //TODO: scroll if is necessary
             }, 60);
-            setTimeout(function () {
-                // if (document.activeElement === self.input) self.input.select();
-            }, 120);
+            // setTimeout(function () {
+            //     if (document.activeElement === self.input) self.input.select();
+            // }, 120);
         }
     };
     this.hideList = function () {
@@ -377,14 +381,6 @@ function CbLiveSearch(input, fillItems) {
     };
     this.setEmptyText = function (text) {
         self.emptyText = text;
-    };
-    this.showOrHideEmptyText = function () {
-        if (self.list.tbody.rows.length == 0) {
-            self.list.messageBox.innerText = self.emptyText || '';
-            self.list.messageBox.classList.add('show');
-        } else {
-            self.list.messageBox.classList.remove('show');
-        }
     };
     this.clear = function () {
         self.list.clear();
