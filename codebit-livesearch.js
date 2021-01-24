@@ -253,17 +253,9 @@ function CbLiveSearch(input, fillItems) {
                     for (var i = 0; i < data.records.length; i++) {
                         self.list.addItem(data.records[i].html, data.records[i].id);
                     }
-                    if (data.records.length !== 0 && text.trim().length !== 0) {
-                        self.list.manualSelectNext();
-                    }
-                    if (data.records.length !== 0) {
-                        self.list.messageBox.classList.remove('show');
-                    } else {
-                        self.list.messageBox.innerText = self.emptyText || '';
-                        self.list.messageBox.classList.add('show');
-                    }
                 }
             }
+            self.showOrHideEmptyText();
         } finally {
             self.chainBusy = false;
         }
@@ -398,11 +390,15 @@ function CbLiveSearch(input, fillItems) {
         self.emptyText = text;
     };
     this.showOrHideEmptyText = function () {
-        if (self.list.tbody.rows.length == 0) {
+        if (self.list.tbody.rows.length === 0) {
             self.list.messageBox.innerText = self.emptyText || '';
             self.list.messageBox.classList.add('show');
         } else {
             self.list.messageBox.classList.remove('show');
+            var text = self.getText();
+            if (self.list.tbody.rows.length !== 0 && text.trim().length !== 0) {
+                self.list.manualSelectNext();
+            }
         }
     };
     this.clear = function () {
