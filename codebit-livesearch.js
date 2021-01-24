@@ -240,6 +240,34 @@ function CbLiveSearch(input, fillItems) {
     });
 
     this.searchDelay = 100;
+    this.chainCallback = [];
+    this.chainBusy = false;
+    this.chainProcess = function () {
+        if (self.chainBusy) return;
+        self.chainBusy = true;
+        try {
+            while (self.chainCallback.length !== 0) {
+                var data = self.chainCallback.shift();
+                if (data.requestId == self.requestId) {
+                    self.list.clear();
+                    for (var i = 0; i < data.records.length; i++) {
+                        self.list.addItem(data.records[i].html, data.records[i].id);
+                    }
+                    if (data.records.length !== 0 && text.trim().length !== 0) {
+                        self.list.manualSelectNext();
+                    }
+                    if (data.records.length !== 0) {
+                        self.list.messageBox.classList.remove('show');
+                    } else {
+                        self.list.messageBox.innerText = self.emptyText || '';
+                        self.list.messageBox.classList.add('show');
+                    }
+                }
+            }
+        } finally {
+            self.chainBusy = false;
+        }
+    }
     this.search = function (emptySearch) {
         if (emptySearch === undefined) emptySearch = false;
         if (self.timerCallback != null) {
@@ -261,21 +289,8 @@ function CbLiveSearch(input, fillItems) {
                 }
                 try {
                     self.sourceCallback(function (data) {
-                        if (data.requestId == self.requestId) {
-                            self.list.clear();
-                            for (var i = 0; i < data.records.length; i++) {
-                                self.list.addItem(data.records[i].html, data.records[i].id);
-                            }
-                            if (data.records.length != 0 && text.trim().length != 0) {
-                                self.list.manualSelectNext();
-                            }
-                            if (data.records.length != 0) {
-                                self.list.messageBox.classList.remove('show');
-                            } else {
-                                self.list.messageBox.innerText = self.emptyText || '';
-                                self.list.messageBox.classList.add('show');
-                            }
-                        }
+                        self.chainCallback.push(data);
+                        self.chainProcess();
                     }, self);
                 } finally {
                     if (emptySearch) {
