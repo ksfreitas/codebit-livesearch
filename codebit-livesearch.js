@@ -360,6 +360,8 @@ function CbLiveSearch(input, fillItems) {
         } else {
             self.selectedValue = null;
             self.input.value = null;
+            self.list.clear();
+            self.search(true);
         }
         self.list.selectValue(value);
 
