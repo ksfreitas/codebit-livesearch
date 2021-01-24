@@ -396,7 +396,7 @@ function CbLiveSearch(input, fillItems) {
         } else {
             self.list.messageBox.classList.remove('show');
             var text = self.getText();
-            if (self.list.tbody.rows.length !== 0 && text.trim().length !== 0) {
+            if (self.list.tbody.rows.length !== 0 && text.trim().length !== 0 && self.list.manualSelection === -1) {
                 self.list.manualSelectNext();
             }
         }
